@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    <header>
+        <%- include('../partials/header'); %>
+       </header>
+    
+   <form action="/Payment/<%=customer._id%>" class="payment" method="post">
+    <h4>MAKE <b><%=customer.name.toUpperCase()%>'s </b> PAYMENT</h4>
+        <div>
+        <%customer.debt.forEach((debt)=>{%>
+             <input type="text" value="DEBT AMOUNT:<%=debt.amount%>" disabled/><br>
+             <input type="text" value="DEBT REMAINING:<%=debt.amountRem%>" disabled/>
+             
+             <input type="text"  name="amountRem" value="<%=debt.amountRem%>" hidden>
+            
+        <%})%>
+        </div>
+             <div>
+                <input class="input" type="text" name="name"  hidden value="<%=customer.name%>">
+            </div>
+        
+       
+    <div>
+        <input type="text"  name="amountPaid" placeholder="AMOUNT BEING PAID">
+    </div>
+    <div>
+        <button class="btn-primary" class="btn" type="submit">PAY</ADDress></button>
+    </div>
+   </form>
+</body>
+</html>

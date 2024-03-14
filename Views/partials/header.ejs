@@ -1,0 +1,26 @@
+<nav>
+    <ul class="navbar">
+      <div class="logo">
+        <a href="http:/Home">
+          <img src="http://localhost:3005/Images/IMG-20230104-WA0002.jpg" alt="" srcset="">
+        </a>
+      </div>
+      <div class="items">
+        <li><a href="http:/Home">HOME</a></li>
+        <li><a href="http:/Add">NEW DEBT</a></li>
+        <%if(user){%>
+          <li>
+            <a href="http:/SignOut">SIGN OUT</a>
+          </li>
+       <% }%>
+        <li>
+          <form action="/Search" class="search" method="get" >
+            <input type="text" name="name" id="" placeholder="Enter Name...">
+           <button type="submit">SEARCH</button>
+          </form>
+        </li>
+        
+       
+      </div>
+    </ul>
+  </nav>

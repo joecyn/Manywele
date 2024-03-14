@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <%- include('../partials/head'); %>     
+   
+</head>
+<body>
+    <%- include('../partials/header'); %>
+    <%if(message.success){%>
+        <div class="alert alert-success" role="alert" id="alert" >
+          <%=message.success %>
+        </div>
+        <%}%>
+        
+   <section>
+    <h4><%=customer.name.toUpperCase()%>'s DEBT DETAILS<hr></h4>
+    <div>
+        <p ><b>NAME:</b><%=customer.name.toUpperCase()%></p>  
+    </div>
+    <div>
+    
+    </div>
+    <div>
+        <p ><b>PHONE:</b><%=customer.phone%></p>
+    </div>
+    
+    <div>
+        <%customer.debt.forEach((debt)=>{%>
+            
+            <p ><b>DEBT AMOUNT:KSH  </b><%=debt.amount%></p>
+           
+        <%})%>
+        </div>
+        
+        <div>
+            <%customer.debt.forEach((debt)=>{%>
+                
+                <p ><b>DEBT REMAINING:KSH  </b><%=debt.amountRem%></p>
+               
+            <%})%>
+            </div>
+    <div><b>PAYMENTS MADE</b></div>
+    <div>
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+            
+                    <th scope="col">AMOUNT PAID</th>
+                    <th scope="col">DATE PAID</th>
+                  </tr>
+    
+            </thead>
+            <tbody>
+                <%customer.payment.forEach((pay)=>{%>
+                    <tr>
+                        <td>KSH.<%=pay.amountPaid%></td>
+                        
+                        <td><%=pay.datePaid.getDate()%>/<%=pay.datePaid.getMonth()+1%>/<%= pay.datePaid.getFullYear()%></td>
+                      
+                    </tr>
+                      <%})%>
+                      
+    
+            </tbody>
+        </table><br>
+        <div><b>TOTAL PAYMENT:KSH <%=totalPayment%></b>
+        </div>
+       
+    </div>
+    <br>
+    
+    <div><b>ITEMS PURCHASED:</b></div>
+    <div>
+
+        <p class="textarea"><%=customer.debt[0].items.toUpperCase() %></p>
+        
+    </div>
+    <a href="/Update/<%=customer._id%>" class="edit" ><i class="fa-solid fa-pencil">  EDIT</i></a> 
+    <a href="/Delete/<%=customer._id%>"><i class="fa-solid fa-trash-can " style="color:red">  DELETE</i></a>
+    
+</section>
+                
+</body>
+</html>
+<script>
+ 
+    console.log("<%=JSON.stringify(message)%>")
+     
+     setTimeout(()=>{
+      let div=document.getElementById("alert")
+      div.style.display="none"
+      
+      
+     }, 2000);
+      //message()
+    
+    </script>

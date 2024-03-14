@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+ <header>
+  <%- include('../partials/header'); %>
+ </header>
+ 
+  <%if(message.success){%>
+    <div class="alert alert-success" role="alert" id="alert" >
+      <%=message.success %>
+    </div>
+    <%}%>
+    
+    <table class="table table-hover table-dark">
+        <thead>
+          <tr>
+            
+            <th scope="col">NAME</th>
+            <th scope="col">PHONE NUMBER</th>
+            <th scope="col">DEBT AMOUNT</th>
+            <th scope="col">DEBT REMAINING</th>
+            <th scope="col" style="text-align:center">ACTIONS</th>
+            
+            
+            
+          </tr>
+        </thead>
+        <tbody>
+         
+          <%customers.forEach(customer => {%>
+            <tr>
+              
+              <td>
+                
+                  <%=customer.name.toUpperCase() %>
+                  
+              </td>
+              <td><%=customer.phone%></td>
+              <%customer.debt.forEach((debt)=>{%>
+                <td><%=debt.amount%></td>
+                <td><%=debt.amountRem%></td>
+                
+
+              <%})%>
+              
+              
+              
+              
+              <td>
+                <a href="/Details/<%=customer._id%>"  >DETAILS</a>
+                <a href="/Payment/<%=customer._id%>"  >MAKE PAYMENT</a>
+                <a href="/Update/<%=customer._id%>"  ><i class="fa-solid fa-pencil" style="color:white"></i></a>
+                <a href="/Delete/<%=customer._id%>"><i class="fa-solid fa-trash-can " style="color:red"></i></a>
+              </td>
+            </tr>  
+            <%})%>
+            
+          
+        </tbody>
+      </table>
+      
+</body>
+</html>
+
+<script>
+ 
+console.log("<%=JSON.stringify(message)%>")
+ 
+ setTimeout(()=>{
+  let div=document.getElementById("alert")
+  div.style.display="none"
+  
+  
+ }, 2000);
+  //message()
+
+</script>

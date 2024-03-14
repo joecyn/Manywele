@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+   <form action="/Update/<%=customer._id%>" class="update" method="post">
+    <h4> UPDATE <b><%=customer.name.toUpperCase()%>'s </b> DEBT</h4>
+    <div>NAME</div>
+    <div>
+    <input class="input" type="text" name="name" value="<%=customer.name%>">
+    </div>
+    <div>PHONE</div>
+    <div>
+        <input class="input" type="text" name="phone" value="<%=customer.phone%>">
+    </div>
+    <div>DEBT AMOUNT</div>
+    <div>
+        <input class="input" type="text" name="amount" value="<%=customer.debt[0].amount%>">
+    </div>
+   
+   
+        <textarea name="items" id="" class="textarea"  rows="5"><%=customer.debt[0].items%></textarea>
+    </div>
+    
+    
+    <div>
+        <button type="submit">UPDATE</ADDress></button>
+    </div>
+   </form>
+</body>
+</html>

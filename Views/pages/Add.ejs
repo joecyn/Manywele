@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+    <header>
+      <%- include('../partials/header'); %>
+    </header>
+   <form action="/Add"  class="form" method="post">
+    <h4>NEW DEBT</h4>
+    <div>
+        <input type="text" name="name" placeholder="NAME">
+    </div>
+    
+    <div>
+        <input type="text" name="phone" placeholder="PHONE">
+    </div>
+    <div>
+        <input type="text" name="amount" placeholder="AMOUNT">
+        <div>
+            <input type="text" name="amountPaid" placeholder="AMOUNT PAID">
+        </div>
+    </div>
+    <div>
+        <textarea name="items" id="" cols="30" rows="10" placeholder="Items bought"></textarea>
+    </div>
+    
+    
+    <div>
+        <button  type="submit">ADD</ADDress></button>
+    </div>
+   </form>
+</body>
+</html>
