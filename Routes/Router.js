@@ -26,7 +26,7 @@ router.post("/Register",RegisterController)
 //SIGNOUT ROUTE
 router.get("/SignOut",isAuthenticated,(req,res)=>{
     res.cookie("jwt"," ",{maxAge:1});
-    res.redirect("/User/Login")
+    res.redirect("/Login")
 }
 )
 
@@ -260,7 +260,7 @@ router.get("/Delete/:id",isAuthenticated,async(req,res,next)=>{
         
         //message="Record Deleted SUccessfully"
         req.flash('success','Record Deleted Successfully');
-        res.redirect("/Home")
+        res.redirect("/")
         
     } catch (err) {
        next(err)

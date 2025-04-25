@@ -1,7 +1,7 @@
 const express=require("express");
 const app=express();
 const mongoose=require("mongoose")
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3000;
 const router=require("./Routes/Router")
 // const userRouter=require("./Routes/UserRouter/userRouter")
 const dotenv =require("dotenv")
@@ -30,9 +30,12 @@ app.use(function(req,res,next){
 //Setting View Engine
 
 app.set('view engine','ejs')
+mongoose.set('strictQuery', false)
 
 //DB connection
-mongoose.connect("mongodb://localhost:27017/madeni")
+mongoose.connect("mongodb://0.0.0.0:27017/madeni")
+
+
         .then(()=>{
             console.log("Connected!")
         })
@@ -56,5 +59,5 @@ app.use((err,req,res,next)=>{
 })
 
 app.listen(PORT,()=>{
-    console.log(`Server is Listening port ${PORT}`)
+    console.log(`Server is Listening on PORT: ${PORT}`)
 })
