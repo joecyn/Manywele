@@ -3,11 +3,13 @@ const app=express();
 const mongoose=require("mongoose")
 const PORT = process.env.PORT || 3000;
 const router=require("./Routes/Router")
+
 // const userRouter=require("./Routes/UserRouter/userRouter")
 const dotenv =require("dotenv")
 const cookieParser= require("cookie-parser");
 const session=require("express-session")
 const flash=require('connect-flash')
+
 //Middlewares
 dotenv.config()
 app.use(express.json())
@@ -33,7 +35,7 @@ app.set('view engine','ejs')
 mongoose.set('strictQuery', false)
 
 //DB connection
-mongoose.connect("mongodb://0.0.0.0:27017/madeni")
+mongoose.connect(process.env.DB_URL)
 
 
         .then(()=>{
