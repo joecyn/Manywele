@@ -12,7 +12,7 @@ let maxAge=10*60;
 //Login Routes
 router.get("/Login",(req,res)=>{
     const Message=""
-   res.render('pages/Login',{Message:Message})
+   res.render('Pages/Login',{Message:Message})
    })
 
 router.post("/Login",LoginController)
@@ -20,7 +20,7 @@ router.post("/Login",LoginController)
 //Register
 router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("pages/Register",{Message:Message})
+    res.render("Pages/Register",{Message:Message})
 })
 router.post("/Register",RegisterController)
 
@@ -47,7 +47,7 @@ router.get("/",isAuthenticated,async(req,res,next)=>{
                 //console.log(element.amountRem)
                 })
         });
-        res.render("pages/Home",{customers:customer,totalOwed:totalOwed,user:user})
+        res.render("Pages/Home",{customers:customer,totalOwed:totalOwed,user:user})
              
    
        }
@@ -69,7 +69,7 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
    if(!name){
     const message="Search a Customer from the above  search bar"
     
-    res.render("pages/Search",{customer:"",message:message,user:user})
+    res.render("Pages/Search",{customer:"",message:message,user:user})
    }
   else{
     try {
@@ -81,10 +81,10 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
         }
         else if(customer.length>1){
             // console.log(customer);
-            res.render("pages/ManySearch",{customers:customer,user:user})
+            res.render("Pages/ManySearch",{customers:customer,user:user})
         }
         else{
-            res.render("pages/Search",{customer:customer,user:user})
+            res.render("Pages/Search",{customer:customer,user:user})
         }
         
        } catch (err) {
