@@ -34,7 +34,7 @@ app.use(function(req,res,next){
 //Setting View Engine
 
 app.set('view engine','ejs')
-app.set('Views', path.join(__dirname, '/Views'));
+app.set('views', path.join(__dirname, 'views'));
 mongoose.set('strictQuery', false)
 
 //DB connection
@@ -47,7 +47,7 @@ mongoose.connect(process.env.DB_URL)
         .catch((err)=>{
             console.log(err)
         })
-console.log('Views directory:', app.get('views'));
+
 app.use("/",router)
 // app.use("/Users",userRouter)
 
