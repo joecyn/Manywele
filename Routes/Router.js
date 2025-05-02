@@ -12,7 +12,7 @@ let maxAge=10*60;
 //Login Routes
 router.get("/Login",(req,res)=>{
     const Message=""
-   res.render("Login",{Message:Message})
+   res.render("Pages/Login",{Message:Message})
    })
 
 router.post("/Login",LoginController)
@@ -20,7 +20,7 @@ router.post("/Login",LoginController)
 //Register
 router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("Register",{Message:Message})
+    res.render("Pages/Register",{Message:Message})
 })
 router.post("/Register",RegisterController)
 
