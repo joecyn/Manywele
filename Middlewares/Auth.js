@@ -6,7 +6,7 @@ const isAuthenticated= (req,res,next)=>{
        
         if(token){
             
-            jwt.verify(token,"mutujaba",async(err,user)=>{
+            jwt.verify(token,process.env.SECRET,async(err,user)=>{
                 if(err){
                     res.redirect("/Login")
                 }

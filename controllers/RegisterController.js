@@ -3,25 +3,28 @@ const Joi =require("joi")
 const User=require("../Model/Users")
 const jwt =require("jsonwebtoken")
 
-const RegisterController=async(req,res)=>{
+const RegisterController=async(req,res,next)=>{
      //creating JWT token
      const maxAge=3*26*60*60;
      const createToken=(id)=>{
-         return jwt.sign({id},"mutujaba",{
+         return jwt.sign({id},process.env.SECRET,{
             expiresIn:maxAge
          });
      }
     const schema=Joi.object().keys({
         name:Joi.string().min(6).max(50).required(),
         email: Joi.string().email().required(),
-        password: Joi.string().min(8).max(20).required().pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$"))
+        password: Joi.string().min(8).max(20).required()
 
     } )
     const result=schema.validate(req.body)
     const{name,email,password}=req.body;
     if(result.error)
-    {   const Message=result.error.details[0].message
+    {   
+        
+        const Message="FAILED:Please check your details and try again"
         //return res.json({"message":"All fields are required!"})
+        //next(Message)
         res.render("Pages/Register",{Message:Message})
     }
     else{

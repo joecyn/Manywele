@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken")
 const LoginController=async(req,res)=>{
     //creating JWT token
     const maxAge=3*26*60*60;
+    //console.log(process.env.SECRET)
     const createToken=(id,name)=>{
-       return jwt.sign({id,name},"mutujaba",{
+       return jwt.sign({id,name},process.env.SECRET,{
            expiresIn:maxAge
        });
        
@@ -31,13 +32,14 @@ const LoginController=async(req,res)=>{
     const match= await bcrypt.compare(password,findUser.password)
 
     if(!match) {
-        const Message ="Invalid password or User name"
+        const Message ="Invalid password or Username"
         res.render("pages/Login",{Message:Message})
     }
     else{
         
         const token=createToken(findUser._id,findUser.name);
         res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000});
+        //console.log("Hello")
         res.redirect("/")
     }
     

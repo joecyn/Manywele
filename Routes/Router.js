@@ -2,6 +2,7 @@ const express=require("express");
 const router=express.Router();
 const isAuthenticated=require("../Middlewares/Auth")
 const Customer=require("../Model/customer")
+//const Users=require("../Model/Users");
 const LoginController=require("../controllers/LoginController")
 const RegisterController=require("../controllers/RegisterController")
 //let message;
@@ -35,8 +36,8 @@ router.get("/",isAuthenticated,async(req,res,next)=>{
    
     try {
         const user=req.user
-        const customer=   await Customer.find({}).sort({_id:-1})
-        //  console.log(customer)
+        const customer= await Customer.find({}).sort({_id:-1})
+        
        if(customer){
         const owed=customer
         var totalOwed=0;

@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
+
+  <!-- <style>
+    body{
+      background-image: url("http://localhost:3000/Images/IMG-20230104-WA0002.jpg");
+      height:50%; /* You must set a specified height */
+      background-position: center; /* Center the image */
+      background-repeat: no-repeat; /* Do not repeat the image */
+      background-size: cover; /* Resize the background image to cover the entire container */
+    }
+  </style> -->
 </head>
 <body>
  <header>
@@ -68,8 +78,11 @@
           
         </tbody>
       </table>
-      <p><b>TOTAL DEBT OWED: Ksh <%=totalOwed%></b></p>   
-      <p><b>TOTAL  CUSTOMERS :  <%=customers.length%></b></p>   
+      <button type="button" class="btn btn-dark"><b>TOTAL DEBT OWED: Ksh <%=totalOwed%></button>
+     <br>
+     <br>
+      <button type="button" class="btn btn-dark"><b>TOTAL  CUSTOMERS :  <%=customers.length%></b></button> 
+      
       
        
 </body>

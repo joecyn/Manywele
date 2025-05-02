@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
     <%- include('../partials/head'); %>
+    <!-- <style>
+        body{
+          background-image: url("http://localhost:3000/Images/IMG-20230104-WA0002.jpg");
+          height:50%; /* You must set a specified height */
+          background-position: center; /* Center the image */
+          background-repeat: no-repeat; /* Do not repeat the image */
+          background-size: cover; /* Resize the background image to cover the entire container */
+         
+        }
+      </style>  -->
 </head>
 <body>
     <header>
@@ -9,7 +19,12 @@
        </header>
     
    <form action="/Payment/<%=customer._id%>" class="payment" method="post">
-    <h4>MAKE <b><%=customer.name.toUpperCase()%>'s </b> PAYMENT</h4>
+    <h4></h4>
+    <h4>
+        <button type="button" class="btn btn-dark">
+            MAKE <b><%=customer.name.toUpperCase()%>'s </b> PAYMENT
+        </button>
+    </h4>
         <div>
         <%customer.debt.forEach((debt)=>{%>
              <input type="text" value="DEBT AMOUNT:<%=debt.amount%>" disabled/><br>
@@ -28,7 +43,8 @@
         <input type="text"  name="amountPaid" placeholder="AMOUNT BEING PAID">
     </div>
     <div>
-        <button class="btn-primary" class="btn" type="submit">PAY</ADDress></button>
+        <button type="submit" class="btn btn-dark">PAY</button>
+        <!-- <button class="" class="btn btn-dark" type="submit">PAY</ADDress></button> -->
     </div>
    </form>
 </body>
