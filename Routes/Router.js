@@ -20,7 +20,7 @@ router.post("/Login",LoginController)
 //Register
 router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("pages/Register",{Message:Message})
+    res.render("Register",{Message:Message})
 })
 router.post("/Register",RegisterController)
 
