@@ -48,33 +48,12 @@ mongoose.connect(process.env.DB_URL)
 app.use("/",router)
 // app.use("/Users",userRouter)
 
-// //Error Handling Middleware
+//Error Handling Middleware
 
-// <<<<<<< HEAD
-// app.use((err,req,res,next)=>{
-//     const errorStatus= err.status || 500;
-//     const errorMessage= "Something went Wrong!"
-//     //res.status(errorStatus).json(errorMessage) 
-//     //console.log(errorMessage)
-//     const user=""
-//     res.render("Error",{message:errorMessage,user:user})
-// =======
-// // app.use((err,req,res,next)=>{
-// //     const errorStatus= err.status || 500;
-// //     const errorMessage= "Something went Wrong!"
-// //     //res.status(errorStatus).json(errorMessage) 
-// //     //console.log(errorMessage)
-// //     const user=""
-// //     res.render("pages/Error",{message:errorMessage,user:user})
-// >>>>>>> 7a0fe851367e53ce8c5f0adbc3874b023a2cefaf
 
-// // })
 
 app.listen(PORT,()=>{
-<<<<<<< HEAD
-    console.log(`Server is Listening on PORT: ${PORT}`)
-})
-=======
+
     console.log(`Server is Listening port ${PORT}`)
 })
->>>>>>> 7a0fe851367e53ce8c5f0adbc3874b023a2cefaf
+
