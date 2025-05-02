@@ -50,15 +50,15 @@ app.use("/",router)
 
 //Error Handling Middleware
 
-// app.use((err,req,res,next)=>{
-//     const errorStatus= err.status || 500;
-//     const errorMessage= "Something went Wrong!"
-//     //res.status(errorStatus).json(errorMessage) 
-//     //console.log(errorMessage)
-//     const user=""
-//     res.render("pages/Error",{message:errorMessage,user:user})
+app.use((err,req,res,next)=>{
+    const errorStatus= err.status || 500;
+    const errorMessage= "Something went Wrong!"
+    //res.status(errorStatus).json(errorMessage) 
+    //console.log(errorMessage)
+    const user=""
+    res.render("Error",{message:errorMessage,user:user})
 
-// })
+})
 
 app.listen(PORT,()=>{
     console.log(`Server is Listening on PORT: ${PORT}`)
