@@ -12,6 +12,10 @@ const session=require("express-session")
 const flash=require('connect-flash')
 
 //Middlewares
+
+app.set('view engine','ejs')
+app.set('views', path.join(__dirname, 'views'));
+
 dotenv.config()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -33,8 +37,7 @@ app.use(function(req,res,next){
 
 //Setting View Engine
 
-app.set('view engine','ejs')
-// app.set('views', path.join(__dirname, 'views'));
+
 mongoose.set('strictQuery', false)
 
 //DB connection
