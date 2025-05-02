@@ -10,7 +10,7 @@ const isAuthenticated=require("../../Middlewares/Auth")
 //Login
 Router.get("/Login",(req,res)=>{
     const Message=""
-   res.render("Pages/Login",{Message:Message})
+   res.render("/Login",{Message:Message})
    })
 
 Router.post("/Login",LoginController)
@@ -18,7 +18,7 @@ Router.post("/Login",LoginController)
 //Register
 Router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("Pages/Register",{Message:Message})
+    res.render("/Register",{Message:Message})
 })
 Router.post("/Register",RegisterController)
 
