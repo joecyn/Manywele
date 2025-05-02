@@ -3,6 +3,7 @@ const app=express();
 const mongoose=require("mongoose")
 const PORT = process.env.PORT || 3000;
 const router=require("./Routes/Router")
+const path = require('path');
 
 // const userRouter=require("./Routes/UserRouter/userRouter")
 const dotenv =require("dotenv")
@@ -16,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 app.use(express.static(__dirname + '/public'))
-app.set('views', path.join(__dirname, 'views'));
+
 
 app.use(session({
     secret: 'keyboard cat',
@@ -33,6 +34,7 @@ app.use(function(req,res,next){
 //Setting View Engine
 
 app.set('view engine','ejs')
+app.set('views', path.join(__dirname, 'views'));
 mongoose.set('strictQuery', false)
 
 //DB connection
