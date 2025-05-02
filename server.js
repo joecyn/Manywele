@@ -47,7 +47,7 @@ mongoose.connect(process.env.DB_URL)
         .catch((err)=>{
             console.log(err)
         })
-
+console.log('Views directory:', app.get('views'));
 app.use("/",router)
 // app.use("/Users",userRouter)
 
