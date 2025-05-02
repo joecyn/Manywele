@@ -12,7 +12,7 @@ let maxAge=10*60;
 //Login Routes
 router.get("/Login",(req,res)=>{
     const Message=""
-   res.render("views/pages/Login",{Message:Message})
+   res.render("/pages/Login",{Message:Message})
    })
 
 router.post("/Login",LoginController)
