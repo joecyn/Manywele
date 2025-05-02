@@ -34,7 +34,7 @@ app.use(function(req,res,next){
 //Setting View Engine
 
 app.set('view engine','ejs')
-app.set('Views', path.join(__dirname, 'Views'));
+app.set('Views', path.join(__dirname, '/Views'));
 mongoose.set('strictQuery', false)
 
 //DB connection
