@@ -5,8 +5,6 @@ const RegisterController=require("../../controllers/RegisterController");
 const isAuthenticated=require("../../Middlewares/Auth")
 
 
-
-
 //Login
 Router.get("/Login",(req,res)=>{
     const Message=""

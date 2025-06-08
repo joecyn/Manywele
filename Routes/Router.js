@@ -155,6 +155,7 @@ router.get("/Details/:id",isAuthenticated,async(req,res,next)=>{
     }
 
 })
+
 //Making payments
 router.get("/Payment/:id",isAuthenticated,async(req,res,next)=>{
     const user=req.user
