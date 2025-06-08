@@ -10,6 +10,7 @@ const dotenv =require("dotenv")
 const cookieParser= require("cookie-parser");
 const session=require("express-session")
 const flash=require('connect-flash')
+const MongoStore = require('connect-mongo');
 
 //Middlewares
 
@@ -30,6 +31,19 @@ app.use(session({
     saveUninitialized: true,
     
 }));
+// Configure session with MongoStore
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'keyboard cat', // Use env variable in production
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_URL, // MongoDB connection string
+      collectionName: 'sessions', // Optional: name of the collection for sessions
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // Session expires after 1 day
+  })
+);
 app.use(flash());
 app.use(function(req,res,next){
     res.locals.message=req.flash();
