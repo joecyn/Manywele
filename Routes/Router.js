@@ -8,7 +8,6 @@ const RegisterController=require("../controllers/RegisterController")
 //let message;
 let maxAge=10*60;
 
-//Auth routes~
 //Login Routes
 router.get("/Login",(req,res)=>{
     const Message=""
@@ -51,7 +50,7 @@ router.get("/",isAuthenticated,async(req,res,next)=>{
              
    
        }
-    //    res.render("pages/Home",{customers:customer,totalOwed,user})
+  
     } catch (err) {
         next(err)
     }
@@ -61,11 +60,11 @@ router.get("/",isAuthenticated,async(req,res,next)=>{
 
 //search
 router.get("/Search",isAuthenticated,async(req,res)=>{
-   // const customer=await Customer.find({}).sort({_id:-1})
+  
    const name=req.query.name
    const user=req.user
    
-//    console.log(name)
+
    if(!name){
     const message="Search a Customer from the above  search bar"
     
@@ -74,13 +73,13 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
   else{
     try {
         const customer=await Customer.find({name:{$regex : name.toLowerCase()}})
-    //    console.log(customer.length)
+   
         if(customer.length===0){
             const message="Customer not Found."
             res.render("pages/Search",{customer:"",message:message,user:user})
         }
         else if(customer.length>1){
-            // console.log(customer);
+           
             res.render("pages/ManySearch",{customers:customer,user:user})
         }
         else{
@@ -89,7 +88,7 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
         
        } catch (err) {
         next(err)
-        // console.log(err);
+      
         
        }
   }
