@@ -25,12 +25,12 @@ app.use(cookieParser());
 app.use(express.static(__dirname + '/public'))
 
 
-app.use(session({
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true,
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: true,
+//     saveUninitialized: true,
     
-}));
+// }));
 // Configure session with MongoStore
 app.use(
   session({
