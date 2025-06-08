@@ -12,7 +12,7 @@ let maxAge=10*60;
 //Login Routes
 router.get("/Login",(req,res)=>{
     const Message=""
-   res.render('Pages/Login',{Message:Message})
+   res.render('pages/Login',{Message:Message})
    })
 
 router.post("/Login",LoginController)
@@ -20,7 +20,7 @@ router.post("/Login",LoginController)
 //Register
 router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("Pages/Register",{Message:Message})
+    res.render("pages/Register",{Message:Message})
 })
 router.post("/Register",RegisterController)
 
@@ -47,7 +47,7 @@ router.get("/",isAuthenticated,async(req,res,next)=>{
                 //console.log(element.amountRem)
                 })
         });
-        res.render("Pages/Home",{customers:customer,totalOwed:totalOwed,user:user})
+        res.render("pages/Home",{customers:customer,totalOwed:totalOwed,user:user})
              
    
        }
@@ -69,7 +69,7 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
    if(!name){
     const message="Search a Customer from the above  search bar"
     
-    res.render("Pages/Search",{customer:"",message:message,user:user})
+    res.render("pages/Search",{customer:"",message:message,user:user})
    }
   else{
     try {
@@ -81,10 +81,10 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
         }
         else if(customer.length>1){
             // console.log(customer);
-            res.render("Pages/ManySearch",{customers:customer,user:user})
+            res.render("pages/ManySearch",{customers:customer,user:user})
         }
         else{
-            res.render("Pages/Search",{customer:customer,user:user})
+            res.render("pages/Search",{customer:customer,user:user})
         }
         
        } catch (err) {
@@ -103,7 +103,7 @@ router.get("/Search",isAuthenticated,async(req,res)=>{
 //Adding a debt route
 router.get("/Add",isAuthenticated,(req,res)=>{
     const user=req.user
-  res.render("Pages/Add",{user:user})
+  res.render("pages/Add",{user:user})
 })
 router.post("/Add",isAuthenticated,async(req,res,next)=>{
     const{name,phone,amount,items,amountPaid}=req.body
@@ -147,7 +147,7 @@ router.get("/Details/:id",isAuthenticated,async(req,res,next)=>{
          paid.forEach((element)=>{
         totalPayment+=element.amountPaid
         })
-        res.render("Pages/Details",{customer:customer,totalPayment:totalPayment,user:user})
+        res.render("pages/Details",{customer:customer,totalPayment:totalPayment,user:user})
         //res.send(typeof(customer))
     } catch (err) {
         next(err)
@@ -163,7 +163,7 @@ router.get("/Payment/:id",isAuthenticated,async(req,res,next)=>{
     try {
         const customer=await Customer.findById({_id:id})
          
-        res.render("Pages/Payment",{customer:customer,user:user})
+        res.render("pages/Payment",{customer:customer,user:user})
         
     } catch (err) {
         next(err)
@@ -206,7 +206,7 @@ router.get("/Update/:id",isAuthenticated,async(req,res,next)=>{
         if(!customer){
             next({err: "Record not found"})
         }
-        res.render("Pages/Update",{customer:customer,user:user})
+        res.render("pages/Update",{customer:customer,user:user})
         
     } catch (err) {
         next(err)
