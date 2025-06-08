@@ -14,7 +14,7 @@ const flash=require('connect-flash')
 //Middlewares
 
 app.set('view engine','ejs')
-// app.set('views', path.join(__dirname, 'views/Pages'));
+app.set('views', path.join(__dirname, 'views/pages'));
 
 dotenv.config()
 app.use(express.json())
@@ -60,6 +60,6 @@ app.use("/",router)
 
 app.listen(PORT,()=>{
 
-    console.log(`Server is Listening port ${PORT}`)
+    console.log(`Server is Listening on port: ${PORT}`)
 })
 
