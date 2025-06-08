@@ -14,7 +14,7 @@ const flash=require('connect-flash')
 //Middlewares
 
 app.set('view engine','ejs')
-app.set('views', path.join(__dirname, 'views/pages'));
+app.set('views', path.join(__dirname, 'views'));
 
 dotenv.config()
 app.use(express.json())
