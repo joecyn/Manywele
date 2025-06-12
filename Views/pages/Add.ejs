@@ -2,50 +2,31 @@
 <html lang="en">
 <head>
   <%- include('../partials/head'); %>
-  <!-- <style>
-    body{
-      background-image: url("http://localhost:3000/Images/IMG-20230104-WA0002.jpg");
-      height:50%; /* You must set a specified height */
-      background-position: center; /* Center the image */
-      background-repeat: no-repeat; /* Do not repeat the image */
-      background-size: cover; /* Resize the background image to cover the entire container */
-    }
-  </style> -->
 </head>
 <body>
-    <header>
-      <%- include('../partials/header'); %>
-    </header>
-   <form method="post" action="/Add"  class="form" >
-    <!-- <h4>NEW DEBT</h4> -->
-    <h4>
-        <button type="submit" class="btn btn-dark">
-            NEW DEBT
-        </button>
-    </h4>
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+  <form method="POST" action="/Add" class="form">
+    <h4>NEW DEBT</h4>
     <div>
-        <input type="text" name="name" placeholder="NAME">
-    </div>
-    
-    <div>
-        <input type="text" name="phone" placeholder="PHONE">
+      <input type="text" name="name" class="form-control" placeholder="NAME" required>
     </div>
     <div>
-        <input type="text" name="amount" placeholder="AMOUNT">
-        <div>
-            <input type="text" name="amountPaid" placeholder="AMOUNT PAID">
-        </div>
+      <input type="text" name="phone" class="form-control" placeholder="PHONE" required>
     </div>
     <div>
-        <textarea name="items" id="items" cols="20" rows="5" placeholder="Items bought" required></textarea>
+      <input type="number" name="amount" class="form-control" placeholder="AMOUNT" min="0" required>
     </div>
-    
-    
     <div>
-        <button type="submit" class="btn btn-dark">ADD</button>
-        <!-- <button  type="submit">ADD</ADDress></button> -->
+      <input type="number" name="amountPaid" class="form-control" placeholder="AMOUNT PAID" min="0">
     </div>
-   </form>
+    <div>
+      <textarea name="items" class="form-control" rows="5" placeholder="Items bought" required></textarea>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-dark">ADD</button>
+    </div>
+  </form>
 </body>
 </html>
-

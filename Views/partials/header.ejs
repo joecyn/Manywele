@@ -1,26 +1,29 @@
-<nav>
-    <ul class="navbar">
-      <div class="logo">
-        <a href="/">
-          <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="" srcset="">
-        </a>
-      </div>
-      <div class="items">
-        <li><a href="/">HOME</a></li>
-        <li><a href="/Add">NEW DEBT</a></li>
-        <%if(user){%>
-          <li>
-            <a href="/SignOut">SIGN OUT</a>
-          </li>
-       <% }%>
-        <li>
-          <form action="/Search" class="search" method="get" >
-            <input type="text" name="name" id="" placeholder="Enter Name...">
-           <button type="submit">SEARCH</button>
-          </form>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+    <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="Bootstrap" width="50" height="50">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
-        
-       
-      </div>
-    </ul>
-  </nav>
+        <li class="nav-item">
+          <a class="nav-link" href="/Add">New Debt</a>
+        </li>
+         <% if (user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/SignOut">Sign Out</a>
+          </li>
+        <% } %>
+      </ul>
+      <form class="d-flex " role="search" action="/Search" method="GET">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit" >Search</button>
+      </form>
+    </div>
+  </div>
+</nav>

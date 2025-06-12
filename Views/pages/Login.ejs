@@ -1,82 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Login</title>
-    <style>
-        body{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-           
-            
-        }
-        form{
-            position: absolute;
-            top:15%;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            padding: 20px;
-        }
-        .div h1{
-            text-align: center;
-        }
-        .img{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        align-content: center;
-        }
-        img{
-        width:100px;
-        height: 100px;
-        /* filter: opacity(0.5) drop-shadow(0 0 black); */
-        
-      }
-        .input{
-            width:450px;
-            height:50px;
-            margin-bottom: 20px;   
-        }
-        .btn{
-            width:450px;
-            height:50px;
-            background-color:black;
-            color:white;
-        }
-        .link{
-            padding-top: 20px;
-        }
-    </style>
+  <%- include('../partials/head'); %>
 </head>
 <body>
-    <form method="post" action="/Login">
-        <div class="div">
-           <div class="img">
-            <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="" srcset="">
-           </div>
-            <h1>LOGIN</h1>
-            <div>
-                <%if(Message){%>
-                    <p class="text-danger "><%-Message%></p>
-                <%}%>
-            </div>
-            <div>
-                <input type="email" name="email" class="input" placeholder="Email"  required>
-            </div>
-            <div>
-                <input type="password" name="password" class="input" placeholder="Password" required>
-            </div>
-            <div>
-                <button class="btn" type="submit">Login</button>
-            </div>
-            <!-- <div class="link">
-                Please <a href="/Register">Register </a> if you don't have an account
-            </div> -->
-        </div>
-      </form>
-    
+  <header>
+    <!-- <%- include('../partials/header'); %> -->
+  </header>
+  <form method="POST" action="/login" class="login form" >
+    <div class="img">
+      <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="Logo" width="100" height="100">
+    </div>
+    <h1>LOGIN</h1>
+    <% if (Message) { %>
+      <p class="text-danger"><%= Message %></p>
+    <% } %>
+    <div>
+      <input type="email" name="email" class="form-control" placeholder="Email" required>
+    </div>
+    <div>
+      <input type="password" name="password" class="form-control" placeholder="Password" required>
+    </div>
+    <div>
+      <button class="btn btn-dark" type="submit">Login</button>
+    </div>
+    <div class="link">
+      Please <a href="/Register">Register</a> if you don't have an account
+    </div>
+  </form>
 </body>
 </html>

@@ -1,126 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    <%- include('../partials/head'); %>    
-    <!-- <style>
-        body{
-          background-image: url("http://localhost:3000/Images/IMG-20230104-WA0002.jpg");
-          height:50%; /* You must set a specified height */
-          background-position: center; /* Center the image */
-          background-repeat: no-repeat; /* Do not repeat the image */
-          background-size: cover; /* Resize the background image to cover the entire container */
-         
-        }
-      </style>  -->
-   
+  <%- include('../partials/head'); %>
 </head>
 <body>
+  <header>
     <%- include('../partials/header'); %>
-    <%if(message.success){%>
-        <div class="alert alert-success" role="alert" id="alert" >
-          <%=message.success %>
-        </div>
-        <%}%>
-        
-   <section>
-    <h4><%=customer.name.toUpperCase()%>'s DEBT DETAILS<hr></h4>
-    <div>
-        <p ><b>NAME:</b><%=customer.name.toUpperCase()%></p>  
-    </div>
-    <div>
-    
-    </div>
-    <div>
-        <p ><b>PHONE:</b><%=customer.phone%></p>
-    </div>
-    
-    <div>
-        <%customer.debt.forEach((debt)=>{%>
-            
-            <p ><b>DEBT AMOUNT:KSH  </b><%=debt.amount%></p>
-           
-        <%})%>
-        </div>
-        
-        <div>
-            <%customer.debt.forEach((debt)=>{%>
-                
-                <p ><b>DEBT REMAINING:KSH  </b><%=debt.amountRem%></p>
-               
-            <%})%>
-            </div>
-
-            <div>
-                <%customer.debt.forEach((debt)=>{%>
-                    
-                    <p ><b>DATE TAKEN:  </b><%=debt.date.getDate()%>/<%=debt.date.getMonth()+1%>/<%=debt.date.getFullYear()%></p>
-                    
-                   
-                <%})%>
-                </div>
-                
-            
-    <div><b>PAYMENTS MADE</b></div>
-    <div>
+  </header>
+  <div class="container">
+    <% if (message.success) { %>
+      <div class="alert alert-success" role="alert">
+        <%= message.success %>
+      </div>
+    <% } %>
+    <section>
+      <h4><%= customer.name.toUpperCase() %>'s DEBT DETAILS</h4>
+      <hr>
+      <div class="debt-info">
+        <p><b>NAME:</b> <%= customer.name.toUpperCase() %></p>
+        <p><b>PHONE:</b> <%= customer.phone %></p>
+        <% customer.debt.forEach((debt) => { %>
+          <p><b>DEBT AMOUNT:</b> KSH <%= debt.amount %></p>
+          <p><b>DEBT REMAINING:</b> KSH <%= debt.amountRem %></p>
+          <p><b>DATE TAKEN:</b> <%= debt.date.getDate() %>/<%= debt.date.getMonth() + 1 %>/<%= debt.date.getFullYear() %></p>
+        <% }) %>
+      </div>
+      <div><b>PAYMENTS MADE</b></div>
+      <div class="table-responsive">
         <table class="table table-hover table-dark">
-            <thead>
-                <tr>
-            
-                    <th scope="col">AMOUNT PAID</th>
-                    <th scope="col">DATE PAID</th>
-                  </tr>
-    
-            </thead>
-            <tbody>
-                <%customer.payment.forEach((pay)=>{%>
-                    <tr>
-                        <td>KSH.<%=pay.amountPaid%></td>
-                        
-                        <td><%=pay.datePaid.getDate()%>/<%=pay.datePaid.getMonth()+1%>/<%= pay.datePaid.getFullYear()%></td>
-                      
-                    </tr>
-                      <%})%>
-                      
-    
-            </tbody>
-        </table><br>
-        <div><b>TOTAL PAYMENT:KSH <%=totalPayment%></b>
-        </div>
-       
-    </div>
-    <br>
-    
-    <div><b>ITEMS PURCHASED:</b></div>
-    <div>
-
-        <p class="textarea" style="color:rgb(33, 32, 31)"><%=customer.debt[0].items.toUpperCase() %></p>
-        
-    </div>
-    <button type="button" class="btn btn-dark">
-        <a href="/Update/<%=customer._id%>" class="edit" >
-            <i class="fa-solid fa-pencil" style="color:white;width:50px;height:20px;text-align: center; margin-right:10px;">EDIT </i>
-        </a>
-    </button>
-    <button type="button" class="btn btn-dark">
-    <a href="/Delete/<%=customer._id%>">
-        <i class="fa-solid fa-trash-can " style="color:red;width:75px;height:20px;text-align: center; margin-right:10px;">DELETE</i>
-    </a>
-    </button>
-</section>
-                
+          <thead>
+            <tr>
+              <th scope="col">AMOUNT PAID</th>
+              <th scope="col">DATE PAID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% customer.payment.forEach((pay) => { %>
+              <tr>
+                <td>KSH <%= pay.amountPaid %></td>
+                <td><%= pay.datePaid.getDate() %>/<%= pay.datePaid.getMonth() + 1 %>/<%= pay.datePaid.getFullYear() %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <div><b>TOTAL PAYMENT:</b> KSH <%= totalPayment %></div>
+      <br>
+      <div><b>ITEMS PURCHASED:</b></div>
+      <div>
+        <p class="textarea"><%= customer.debt[0].items.toUpperCase() %></p>
+      </div>
+      <button type="button" class="btn btn-dark">
+        <a href="/Update/<%= customer._id %>" class="edit">EDIT <i class="fa-solid fa-pencil"></i></a>
+      </button>
+      <button type="button" class="btn btn-dark">
+        <a href="/Delete/<%= customer._id %>">DELETE <i class="fa-solid fa-trash-can"></i></a>
+      </button>
+    </section>
+  </div>
 </body>
 </html>
-<script>
- 
-    console.log("<%=JSON.stringify(message)%>")
-     
-     setTimeout(()=>{
-      let div=document.getElementById("alert")
-      div.style.display="none"
-      
-      
-     }, 2000);
-      //message()
-    
-    </script>

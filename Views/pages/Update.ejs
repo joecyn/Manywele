@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head'); %>
+  <%- include('../partials/head'); %>
 </head>
 <body>
-    <header>
-        <%- include('../partials/header'); %>
-    </header>
-   <form action="/Update/<%=customer._id%>" class="update" method="post">
-    <h4> UPDATE <b><%=customer.name.toUpperCase()%>'s </b> DEBT</h4>
-    <div>NAME</div>
+  <header>
+    <%- include('../partials/header'); %>
+  </header>
+  <form action="/Update/<%= customer._id %>" class="update" method="POST">
+    <h4>UPDATE <b><%= customer.name.toUpperCase() %>'s</b> DEBT</h4>
     <div>
-    <input class="input" type="text" name="name" value="<%=customer.name%>">
+      <label>NAME</label>
+      <input type="text" name="name" class="form-control" value="<%= customer.name %>" required>
     </div>
-    <div>PHONE</div>
     <div>
-        <input class="input" type="text" name="phone" value="<%=customer.phone%>">
+      <label>PHONE</label>
+      <input type="text" name="phone" class="form-control" value="<%= customer.phone %>" required>
     </div>
-    <div>DEBT AMOUNT</div>
     <div>
-        <input class="input" type="text" name="amount" value="<%=customer.debt[0].amount%>">
+      <label>DEBT AMOUNT</label>
+      <input type="number" name="amount" class="form-control" value="<%= customer.debt[0].amount %>" min="0" required>
     </div>
-   
-   
-        <textarea name="items" id="" class="textarea"  rows="5"><%=customer.debt[0].items%></textarea>
-    </div>
-    
-    
     <div>
-        <button type="submit">UPDATE</ADDress></button>
+      <label>ITEMS PURCHASED</label>
+      <textarea name="items" class="form-control" rows="5" required><%= customer.debt[0].items %></textarea>
     </div>
-   </form>
+    <div>
+      <button type="submit" class="btn btn-dark">UPDATE</button>
+    </div>
+  </form>
 </body>
 </html>

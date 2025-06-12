@@ -1,61 +1,13 @@
- body{
-        width: 980px;
-        margin: auto;
-        /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-        font-family:Verdana, Geneva, Tahoma, sans-serif; 
-      }
-      .edit{
-        padding-right:10px;
-      }
-      .navbar{
-        display: flex;
-        justify-content: space-between;
-        background-color:whitesmoke;
-      }
-      .items{
-        display: flex;
-      }
-       li{
-        list-style: none;
-      }
-      li a{
-        text-decoration: none;
-        margin-right:20px;
-        color: black;
-        font-size:large;
-        font-weight: bold;
-      }
-      li a:hover{
-        color: black;
-      }
-      a img{
-        width:75px;
-        height: 75px;
-        filter: opacity(0.5) drop-shadow(0 0 black);
-      }
-      button{
-        background-color: black;
-        color: white;
-        border: none;
-        font-size: large;
-      }
-      a{
-        text-decoration: none;
-        color: white;
-      }
-      a:hover{
-        color: white;
-        
-      }
-      i{
-        color:black;
-        height: 50px;
+.form{
+          padding-top:10%;
+          width:50%;
+          margin: auto;
       }
       .form, h4{
         text-align: center;
 
       }
-      .form input,.update input,.payment input{
+      .form,div input,.update input,.payment input{
         width: 450px;
         height: 35px;
         margin-bottom: 10px;
@@ -69,11 +21,6 @@
         height: 35px;
 
       }
-      .update,.payment{
-          position: absolute;
-          left: 35%;
+      button{
+        height: 35px;
       }
-      td a{
-        margin-right: 20px;
-      }
-     
