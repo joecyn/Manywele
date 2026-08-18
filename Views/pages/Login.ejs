@@ -4,29 +4,29 @@
   <%- include('../partials/head'); %>
 </head>
 <body>
-  <header>
-    <!-- <%- include('../partials/header'); %> -->
-  </header>
-  <form method="POST" action="/login" class="login form" >
-    <div class="img">
-      <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="Logo" width="100" height="100">
-    </div>
-    <h1>LOGIN</h1>
-    <% if (Message) { %>
-      <p class="text-danger"><%= Message %></p>
-    <% } %>
-    <div>
-      <input type="email" name="email" class="form-control" placeholder="Email" required>
-    </div>
-    <div>
-      <input type="password" name="password" class="form-control" placeholder="Password" required>
-    </div>
-    <div>
-      <button class="btn btn-dark" type="submit">Login</button>
-    </div>
-    <div class="link">
-      Please <a href="/Register">Register</a> if you don't have an account
-    </div>
-  </form>
+  <main class="auth-page">
+    <form method="POST" action="/Login" class="auth-card">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="auth-logo">
+        <img src="http://192.168.100.15:4000/Images/IMG-20230104-WA0002.jpg" alt="Deni Debt" width="100" height="100">
+      </div>
+      <h1 class="auth-title">Login</h1>
+      <% if (Message) { %>
+        <p class="alert alert-danger mb-0 text-center"><%= Message %></p>
+      <% } %>
+      <div class="mb-3">
+        <input type="email" name="email" class="form-control" placeholder="Email" required>
+      </div>
+      <div class="mb-3">
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+      </div>
+      <div>
+        <button class="btn btn-primary w-100" type="submit">Login</button>
+      </div>
+      <div class="link text-center">
+        Please <a href="/Register">register</a> if you don't have an account.
+      </div>
+    </form>
+  </main>
 </body>
 </html>

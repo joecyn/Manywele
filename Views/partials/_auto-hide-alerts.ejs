@@ -1,0 +1,20 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    try {
+      var alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function (a) {
+        // keep visible for 3 seconds then fade out
+        setTimeout(function () {
+          a.style.transition = 'opacity 0.4s ease';
+          a.style.opacity = '0';
+          setTimeout(function () {
+            if (a && a.parentNode) a.parentNode.removeChild(a);
+          }, 400);
+        }, 3000);
+      });
+    } catch (e) {
+      // ignore errors in older browsers
+      console && console.error && console.error(e);
+    }
+  });
+</script>

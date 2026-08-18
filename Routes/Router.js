@@ -2,16 +2,18 @@ const express=require("express");
 const router=express.Router();
 const isAuthenticated=require("../Middlewares/Auth")
 const Customer=require("../Model/customer")
+const User = require("../Model/Users")
+const rateLimit=require("../Middlewares/rateLimit")
+const Joi = require('joi');
 //const Users=require("../Model/Users");
 const LoginController=require("../controllers/LoginController")
 const RegisterController=require("../controllers/RegisterController")
 //let message;
 let maxAge=10*60;
-
-//Login Routes
+//Login
 router.get("/Login",(req,res)=>{
     const Message=""
-   res.render('pages/Login',{Message:Message,user:"user",title:"Login"})
+   res.render("pages/Login",{Message:Message,user:null,title:"Login"})
    })
 
 router.post("/Login",LoginController)
@@ -19,82 +21,106 @@ router.post("/Login",LoginController)
 //Register
 router.get("/Register",(req,res)=>{
     const Message =" "
-    res.render("pages/Register",{Message:Message,title:"Register"})
+    res.render("pages/Register",{Message:Message, title:"" })
 })
 router.post("/Register",RegisterController)
 
 //SIGNOUT ROUTE
 router.get("/SignOut",isAuthenticated,(req,res)=>{
-    res.cookie("jwt"," ",{maxAge:1});
-    res.redirect("/Login")
+    res.clearCookie('jwt', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'Lax'
+    });
+    res.redirect('/Login');
 }
 )
-
-//Home route
-router.get("/",isAuthenticated,async(req,res,next)=>{
-   
+// Home route
+router.get('/', isAuthenticated, async (req, res, next) => {
     try {
-        const user=req.user
-        const customer= await Customer.find({}).sort({_id:-1})
-        
-       if(customer){
-        const owed=customer
-        var totalOwed=0;
-         owed.forEach((cust)=>{
-            cust.debt.forEach((element)=>{
-                totalOwed+=element.amountRem
-                //console.log(element.amountRem)
-                })
+        const user = req.user;
+        const searchTerm = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+
+        // pagination params
+        const pageSize = 5; // items per page
+        let page = parseInt(req.query.page, 10) || 1;
+        if (Number.isNaN(page) || page < 1) page = 1;
+
+        const baseFilter = { 'debt.0': { $exists: true } };
+        const customerFilter = searchTerm
+            ? { ...baseFilter, name: { $regex: new RegExp(searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') } }
+            : baseFilter;
+
+        const totalCustomersCount = await Customer.countDocuments(customerFilter);
+        const totalPages = Math.max(1, Math.ceil(totalCustomersCount / pageSize));
+        if (page > totalPages) page = totalPages;
+
+        // fetch only the page of customers with debts
+        const customers = await Customer.find(customerFilter)
+            .sort({ _id: -1 })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize);
+
+        // compute totals across all customers using aggregation
+        const owedAgg = await Customer.aggregate([
+            { $unwind: { path: '$debt', preserveNullAndEmptyArrays: false } },
+            { $group: { _id: null, totalOwed: { $sum: '$debt.amountRem' } } }
+        ]);
+        const totalOwed = (owedAgg[0] && owedAgg[0].totalOwed) ? owedAgg[0].totalOwed : 0;
+
+        const paidAgg = await Customer.aggregate([
+            { $unwind: { path: '$debt', preserveNullAndEmptyArrays: false } },
+            { $match: { 'debt.amountRem': { $lte: 0 } } },
+            { $count: 'totalFullyPaid' }
+        ]);
+        const totalFullyPaid = (paidAgg[0] && paidAgg[0].totalFullyPaid) ? paidAgg[0].totalFullyPaid : 0;
+
+        // count customers who have at least one debt (fully paid or not)
+        const totalUsers = await Customer.countDocuments({ 'debt.0': { $exists: true } });
+
+        res.render('pages/Home', {
+            customers: customers,
+            totalOwed: totalOwed,
+            user: user,
+            title: 'Home',
+            showSearch: true,
+            totalUsers: totalUsers,
+            totalFullyPaid: totalFullyPaid,
+            // pagination props
+            page: page,
+            totalPages: totalPages,
+            pageSize: pageSize,
+            totalCustomersCount: totalCustomersCount,
+            searchTerm: searchTerm
         });
-        res.render("pages/Home",{customers:customer,totalOwed:totalOwed,user:user,title:"Home"})
-             
-   
-       }
-  
     } catch (err) {
-        next(err)
+        next(err);
     }
-   
-    
-    })
 
+});
 //search
-router.get("/Search",isAuthenticated,async(req,res)=>{
-  
-   const name=req.query.name
-   const user=req.user
-   
+router.get('/Search', isAuthenticated, async (req, res, next) => {
+    return res.status(403).render('pages/Error', { message: 'Search is only allowed from the Home page' });
+});
 
-   if(!name){
-    const message="Search a Customer from the above  search bar"
-    
-    res.render("pages/Search",{customer:"",message:message,user:user,title:"Search"})
-   }
-  else{
+// Secure POST search with validation and rate limiting
+router.post('/Search', isAuthenticated, rateLimit({ windowMs: 60 * 1000, max: 20 }), async (req, res, next) => {
+    const schema = Joi.object({
+        name: Joi.string().trim().min(1).max(100).required()
+    });
+
+    const { error, value } = schema.validate(req.body);
+    if (error) {
+        return res.redirect('/');
+    }
+
     try {
-        const customer=await Customer.find({name:{$regex : name.toLowerCase()}})
-   
-        if(customer.length===0){
-            const message="Customer not Found."
-            res.render("pages/Search",{customer:"",message:message,user:user,title:"Search"})
-        }
-        else if(customer.length>1){
-           
-            res.render("pages/ManySearch",{customers:customer,user:user,title:"ManySearch"})
-        }
-        else{
-            res.render("pages/Search",{customer:customer,user:user,title:"Search"})
-        }
-        
-       } catch (err) {
-        next(err)
-      
-        
-       }
-  }
-   
-    
-})
+        const searchName = encodeURIComponent(value.name);
+        return res.redirect(`/?search=${searchName}`);
+    } catch (err) {
+        return next(err);
+    }
+});
 
 
    

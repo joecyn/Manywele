@@ -2,46 +2,44 @@ const User=require("../Model/Users")
 const bcrypt=require("bcrypt");
 const jwt = require("jsonwebtoken")
 
-const LoginController=async(req,res)=>{
-    //creating JWT token
-    const maxAge=3*26*60*60;
-    //console.log(process.env.SECRET)
-    const createToken=(id,name)=>{
-       return jwt.sign({id,name},process.env.SECRET,{
-           expiresIn:maxAge
-       });
-       
-    }
+const LoginController = async (req, res) => {
+    // creating JWT token
+    const maxAge = 3 * 24 * 60 * 60; // 3 days in seconds
+
+    const createToken = (payload) => {
+        if (!process.env.SECRET) throw new Error('JWT secret not configured');
+        return jwt.sign(payload, process.env.SECRET, { expiresIn: maxAge });
+    };
     try{
     const{email,password}=req.body;
-    if(!email || !password){
-        const Message="All fields are required!"
-        //res.send(Message)
-        res.render("pages/Login",{Message:Message})
-
-    } 
+        if (!email || !password) {
+            const Message = 'All fields are required!';
+            return res.render('pages/Login', { Message: Message, user: null, title: 'Login' });
+        }
     
     else{
         const findUser= await User.findOne({email:email})
-    if(!findUser) {
-        const Message="User does not Exist please Register"
-        res.render("pages/Login",{Message:Message})
-    } 
+        if (!findUser) {
+            const Message = 'User does not Exist please Register';
+            return res.render('pages/Login', { Message: Message, user: null, title: 'Login' });
+        }
     
 
     const match= await bcrypt.compare(password,findUser.password)
 
-    if(!match) {
-        const Message ="Invalid password or Username"
-        res.render("pages/Login",{Message:Message})
-    }
-    else{
-        
-        const token=createToken(findUser._id,findUser.name);
-        res.cookie('jwt',token,{httpOnly:true,maxAge:maxAge*1000});
-        //console.log("Hello")
-        res.redirect("/")
-    }
+        if (!match) {
+            const Message = 'Invalid password or Username';
+            return res.render('pages/Login', { Message: Message, user: null, title: 'Login' });
+        }
+
+        const token = createToken({ id: findUser._id, name: findUser.name });
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Lax',
+        });
+        return res.redirect('/');
     
     }
     

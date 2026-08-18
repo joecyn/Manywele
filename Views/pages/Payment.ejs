@@ -7,7 +7,8 @@
   <header>
     <%- include('../partials/header'); %>
   </header>
-  <form action="/payment/<%= customer._id %>" class="payment" method="POST">
+  <form action="/payment/<%= customer._id %>" class="payment update" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <h4>MAKE <b><%= customer.name.toUpperCase() %>'s</b> PAYMENT</h4>
     <div class="debt-info">
       <% customer.debt.forEach((debt) => { %>
@@ -23,7 +24,7 @@
       <input type="number" name="amountPaid" class="form-control" placeholder="AMOUNT BEING PAID" min="0" required>
     </div>
     <div>
-      <button type="submit" class="btn btn-dark">PAY</button>
+      <button type="submit" class="btn btn-primary">PAY</button>
     </div>
   </form>
 </body>

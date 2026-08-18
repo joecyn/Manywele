@@ -8,7 +8,21 @@
     <%- include('../partials/header'); %>
   </header>
   <div class="container">
-    <% if (message.success) { %>
+    <div class="stats-row" style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+      <div class="stat-card" style="flex:1;min-width:180px;background:#007bff;padding:12px;border-radius:6px;color:#fff;">
+        <div style="font-size:0.9rem;opacity:0.8">TOTAL USERS</div>
+        <div style="font-size:1.4rem;font-weight:700"><%= typeof totalUsers !== 'undefined' ? totalUsers : 0 %></div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:180px;background:#dc3545;padding:12px;border-radius:6px;color:#fff;">
+        <div style="font-size:0.9rem;opacity:0.8">TOTAL MONEY OWED</div>
+        <div style="font-size:1.2rem;font-weight:700">Ksh <%= typeof totalOwed !== 'undefined' ? totalOwed : 0 %></div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:180px;background:#28a745;padding:12px;border-radius:6px;color:#fff;">
+        <div style="font-size:0.9rem;opacity:0.8">DEBTS FULLY PAID</div>
+        <div style="font-size:1.4rem;font-weight:700"><%= typeof totalFullyPaid !== 'undefined' ? totalFullyPaid : 0 %></div>
+      </div>
+    </div>
+    <% if (message && message.success) { %>
       <div class="alert alert-success" role="alert">
         <%= message.success %>
       </div>
@@ -17,6 +31,7 @@
       <table class="table table-hover table-dark">
         <thead>
           <tr>
+            <th scope="col">#</th>
             <th scope="col">NAME</th>
             <th scope="col">PHONE NUMBER</th>
             <th scope="col">DEBT AMOUNT</th>
@@ -25,22 +40,30 @@
           </tr>
         </thead>
         <tbody>
-          <% if (!customers) { %>
-            <tr><td colspan="5"><h4>No Records Available</h4></td></tr>
+          <% if (!customers || customers.length === 0) { %>
+            <tr><td colspan="6"><h4>No Records Available</h4></td></tr>
           <% } else { %>
-            <% customers.forEach(customer => { %>
+            <% const currentPage = typeof page !== 'undefined' ? page : 1; const pageSizeLocal = typeof pageSize !== 'undefined' ? pageSize : 15; const offset = (currentPage - 1) * pageSizeLocal; %>
+            <% customers.forEach(function(customer, idx) { %>
               <tr>
+                <td><%= offset + idx + 1 %></td>
                 <td><%= customer.name.toUpperCase().slice(0, 10) %>...</td>
                 <td><%= customer.phone %></td>
                 <% customer.debt.forEach((debt) => { %>
                   <td><%= debt.amount %></td>
-                  <td><%= debt.amountRem %></td>
+                  <td>
+                    <% if (debt.amountRem <= 0) { %>
+                      <span class="status-badge status-paid">Fully Paid</span>
+                    <% } else { %>
+                      <%= debt.amountRem %>
+                    <% } %>
+                  </td>
                 <% }) %>
                 <td>
-                  <a href="/Details/<%= customer._id %>" class="btn btn-sm btn-outline-light">DETAILS</a>
+                  <a href="/Details/<%= customer._id %>" class="btn btn-sm btn-outline-light" title="View Details"><i class="fa-solid fa-eye"></i></a>
                   <a href="/Payment/<%= customer._id %>" class="btn btn-sm btn-outline-light">PAY</a>
-                  <a href="/Update/<%= customer._id %>"><i class="fa-solid fa-pencil"></i></a>
-                  <a href="/Delete/<%= customer._id %>"><i class="fa-solid fa-trash-can"></i></a>
+                  <a href="/Update/<%= customer._id %>" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa-solid fa-pencil"></i></a>
+                  <a href="/Delete/<%= customer._id %>" class="btn btn-sm btn-danger" title="Delete" onclick="return confirm('Warning: This will permanently delete this record. This action cannot be undone. Do you want to continue?');"><i class="fa-solid fa-trash-can"></i></a>
                 </td>
               </tr>
             <% }) %>
@@ -48,9 +71,34 @@
         </tbody>
       </table>
     </div>
-    <button type="button" class="btn btn-dark"><b>TOTAL DEBT OWED: Ksh <%= totalOwed %></b></button>
-    <br><br>
-    <button type="button" class="btn btn-dark"><b>TOTAL CUSTOMERS: <%= customers.length %></b></button>
+
+    <% const currentPage = typeof page !== 'undefined' ? page : 1; const pageSizeLocal = typeof pageSize !== 'undefined' ? pageSize : 5; const totalPagesLocal = typeof totalPages !== 'undefined' ? totalPages : 1; const totalRecords = typeof totalCustomersCount !== 'undefined' ? totalCustomersCount : 0; const startRecord = totalRecords === 0 ? 0 : ((currentPage - 1) * pageSizeLocal) + 1; const endRecord = Math.min(currentPage * pageSizeLocal, totalRecords); %>
+    <div style="margin-bottom:12px;color:#333;font-size:0.95rem;">
+      Showing <strong><%= startRecord %></strong> to <strong><%= endRecord %></strong> of <strong><%= totalRecords %></strong> records
+    </div>
+
+    <!-- Pagination -->
+    <% if (totalPagesLocal > 1) { %>
+      <% const queryPrefix = typeof searchTerm !== 'undefined' && searchTerm ? `?search=${encodeURIComponent(searchTerm)}&` : '?'; %>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;">
+        <% if (currentPage > 1) { %>
+          <a href="<%= queryPrefix %>page=1" class="btn btn-sm btn-light">First</a>
+          <a href="<%= queryPrefix %>page=<%= currentPage - 1 %>" class="btn btn-sm btn-light">Previous</a>
+        <% } %>
+        <% for (let p = 1; p <= totalPagesLocal; p++) { %>
+          <% if (p === currentPage) { %>
+            <span class="btn btn-sm btn-primary"><%= p %></span>
+          <% } else { %>
+            <a href="<%= queryPrefix %>page=<%= p %>" class="btn btn-sm btn-light"><%= p %></a>
+          <% } %>
+        <% } %>
+        <% if (currentPage < totalPagesLocal) { %>
+          <a href="<%= queryPrefix %>page=<%= currentPage + 1 %>" class="btn btn-sm btn-light">Next</a>
+          <a href="<%= queryPrefix %>page=<%= totalPagesLocal %>" class="btn btn-sm btn-light">Last</a>
+        <% } %>
+      </div>
+    <% } %>
+    <br>
   </div>
 </body>
 </html>

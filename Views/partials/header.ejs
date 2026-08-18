@@ -1,7 +1,8 @@
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-    <img src="http://localhost:4000/Images/IMG-20230104-WA0002.jpg" alt="Bootstrap" width="50" height="50">
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="http://192.168.100.15:4000/Images/IMG-20230104-WA0002.jpg" alt="Deni Debt" width="46" height="46">
+      <!-- <span class="ms-2">Deni Debt</span> -->
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -12,18 +13,24 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/Add">New Debt</a>
+          <a class="nav-link" href="/Add"><i class="fa-solid fa-circle-plus"></i> New Debt</a>
         </li>
-         <% if (user) { %>
+        <% if (user) { %>
           <li class="nav-item">
-            <a class="nav-link" href="/SignOut">Sign Out</a>
+            <a class="nav-link" href="/SignOut"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/Login"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a>
           </li>
         <% } %>
       </ul>
-      <form class="d-flex " role="search" action="/Search" method="GET">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit" >Search</button>
+      <% if (showSearch) { %>
+      <form class="d-flex search-form" role="search" action="/" method="GET">
+        <input name="search" class="form-control me-2" type="search" placeholder="Search by name" aria-label="Search by name" value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>" required />
+        <button class="btn btn-primary btn-icon" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
       </form>
+      <% } %>
     </div>
   </div>
 </nav>

@@ -8,6 +8,7 @@
     <%- include('../partials/header'); %>
   </header>
   <form action="/Update/<%= customer._id %>" class="update" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <h4>UPDATE <b><%= customer.name.toUpperCase() %>'s</b> DEBT</h4>
     <div>
       <label>NAME</label>
@@ -26,7 +27,7 @@
       <textarea name="items" class="form-control" rows="5" required><%= customer.debt[0].items %></textarea>
     </div>
     <div>
-      <button type="submit" class="btn btn-dark">UPDATE</button>
+      <button type="submit" class="btn btn-primary">UPDATE</button>
     </div>
   </form>
 </body>

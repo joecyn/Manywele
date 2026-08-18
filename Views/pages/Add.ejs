@@ -7,7 +7,8 @@
   <header>
     <%- include('../partials/header'); %>
   </header>
-  <form method="POST" action="/Add" class="form">
+  <form method="POST" action="/Add" class="form update">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <h4>NEW DEBT</h4>
     <div>
       <input type="text" name="name" class="form-control" placeholder="NAME" required>
@@ -25,7 +26,7 @@
       <textarea name="items" class="form-control" rows="5" placeholder="Items bought" required></textarea>
     </div>
     <div>
-      <button type="submit" class="btn btn-dark">ADD</button>
+      <button type="submit" class="btn btn-primary">ADD</button>
     </div>
   </form>
 </body>
