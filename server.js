@@ -166,3 +166,5 @@ const boot = async () => {
 
 boot();
 
+module.exports = app;
+
