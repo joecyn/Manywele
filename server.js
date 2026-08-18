@@ -88,14 +88,14 @@ app.use(function(req,res,next){
 mongoose.set('strictQuery', false)
 
 // DB connection and server startup helper
-const startServer = (port) => {
-  const server = app.listen(port, () => {
-    console.log(`Server is listening on port: ${port}`);
+const startServer = (PORT) => {
+  const server = app.listen(PORT, () => {
+    console.log(`Server is listening on port: ${PORT}`);
   });
 
   server.on('error', (err) => {
     if (err && err.code === 'EADDRINUSE') {
-      console.error(`Port ${port} is already in use. Please free the port or set PORT env var.`);
+      console.error(`Port ${PORT} is already in use. Please free the port or set PORT env var.`);
       process.exit(1);
     }
     console.error('Server error:', err);
@@ -104,7 +104,7 @@ const startServer = (port) => {
 };
 
 // Ensure the desired PORT is available before starting
-const ensurePortAvailable = (port) => {
+const ensurePortAvailable = (PORT) => {
   return new Promise((resolve, reject) => {
     const net = require('net');
     const tester = net.createServer()
@@ -115,7 +115,7 @@ const ensurePortAvailable = (port) => {
       .once('listening', () => {
         tester.close(() => resolve());
       })
-      .listen(port);
+      .listen(PORT);
   });
 };
 
