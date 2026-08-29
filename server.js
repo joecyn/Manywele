@@ -19,7 +19,7 @@ const csurf = require('csurf');
 //Middlewares
 
 app.set('view engine','ejs')
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'Views'));
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -167,4 +167,3 @@ const boot = async () => {
 boot();
 
 module.exports = app;
-
