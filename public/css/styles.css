@@ -172,6 +172,84 @@ a {
   color: var(--app-white);
 }
 
+.notification-button {
+  position: relative;
+}
+
+.notification-nav-link {
+  position: relative;
+}
+
+.notification-menu {
+  min-width: 260px;
+  max-width: min(360px, calc(100vw - 24px));
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.notification-dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal;
+}
+
+.notification-dropdown-item small {
+  color: var(--app-muted);
+}
+
+.notification-count {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+
+.follow-up-entry {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.follow-up-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.follow-up-edit summary {
+  list-style: none;
+}
+
+.follow-up-edit summary::-webkit-details-marker {
+  display: none;
+}
+
+.follow-up-edit-form {
+  min-width: 220px;
+  padding: 10px;
+  margin-top: 6px;
+  background: var(--app-white);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+}
+
+.follow-up-date {
+  margin-left: 8px;
+  font-size: 0.9rem;
+}
+
 /* Shared form cards */
 .update,
 .auth-card {

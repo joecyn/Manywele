@@ -35,8 +35,49 @@ router.get("/SignOut",isAuthenticated,(req,res)=>{
     res.redirect('/Login');
 }
 )
+
+router.use( isAuthenticated, async (req, res, next) => {
+    try {
+        const dateParts = new Intl.DateTimeFormat('en', {
+            timeZone: 'Africa/Nairobi',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).formatToParts(new Date()).reduce((parts, part) => {
+            if (part.type !== 'literal') parts[part.type] = part.value;
+            return parts;
+        }, {});
+        const today = `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
+        const customers = await Customer.find({
+            followUps: {
+                $elemMatch: {
+                    completedAt: null,
+                    dueDate: today
+                }
+            }
+        }).select('name phone followUps').lean();
+
+        res.locals.user = req.user;
+        res.locals.today = today;
+        res.locals.todayFollowUps = customers.flatMap((customer) =>
+            customer.followUps
+                .filter((followUp) => !followUp.completedAt && followUp.dueDate === today)
+                .map((followUp) => ({
+                    customerId: customer._id,
+                    customerName: customer.name,
+                    phone: customer.phone,
+                    followUpId: followUp._id,
+                    dueDate: followUp.dueDate
+                }))
+        );
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 // Home route
-router.get('/', isAuthenticated, async (req, res, next) => {
+router.get('/',isAuthenticated, async (req, res, next) => {
     try {
         const user = req.user;
         const searchTerm = typeof req.query.search === 'string' ? req.query.search.trim() : '';
@@ -77,9 +118,9 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 
         // count customers who have at least one debt (fully paid or not)
         const totalUsers = await Customer.countDocuments({ 'debt.0': { $exists: true } });
-
         res.render('pages/Home', {
             customers: customers,
+            today: res.locals.today,
             totalOwed: totalOwed,
             user: user,
             title: 'Home',
@@ -98,6 +139,108 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     }
 
 });
+
+router.post('/FollowUp/:id', isAuthenticated, async (req, res, next) => {
+    const submittedDate = typeof req.body.dueDate === 'string' ? req.body.dueDate.trim() : '';
+    const dateMatch = submittedDate.match(/^(\d{4}-\d{2}-\d{2})(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?)?$/);
+    const dueDate = dateMatch ? dateMatch[1] : '';
+
+    if (!dueDate) {
+        req.flash('error', 'Choose a due date before adding the follow-up.');
+        return res.redirect('/');
+    }
+
+    const parsedDate = new Date(`${dueDate}T00:00:00.000Z`);
+    if (Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== dueDate) {
+        req.flash('error', 'Choose a valid due date before adding the follow-up.');
+        return res.redirect('/');
+    }
+
+    try {
+        const customer = await Customer.findByIdAndUpdate(
+            req.params.id,
+            { $push: { followUps: { dueDate: dueDate } } },
+            { new: true, runValidators: true }
+        );
+        if (!customer) {
+            req.flash('error', 'Customer record not found.');
+            return res.redirect('/');
+        }
+
+        req.flash('success', `Follow-up added for ${customer.name}.`);
+        return res.redirect('/');
+    } catch (err) {
+        return next(err);
+    }
+});
+
+router.post('/FollowUp/:id/:followUpId/edit', async (req, res, next) => {
+    const submittedDate = typeof req.body.dueDate === 'string' ? req.body.dueDate.trim() : '';
+    const dateMatch = submittedDate.match(/^(\d{4}-\d{2}-\d{2})(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?)?$/);
+    const dueDate = dateMatch ? dateMatch[1] : '';
+    const parsedDate = dueDate ? new Date(`${dueDate}T00:00:00.000Z`) : new Date(NaN);
+
+    if (Number.isNaN(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== dueDate) {
+        req.flash('error', 'Choose a valid follow-up due date.');
+        return res.redirect('/');
+    }
+
+    try {
+        const customer = await Customer.findOneAndUpdate(
+            { _id: req.params.id, 'followUps._id': req.params.followUpId },
+            { $set: { 'followUps.$.dueDate': dueDate } },
+            { new: true, runValidators: true }
+        );
+        if (!customer) {
+            req.flash('error', 'Follow-up not found.');
+            return res.redirect('/');
+        }
+
+        req.flash('success', 'Follow-up updated.');
+        return res.redirect('/');
+    } catch (err) {
+        return next(err);
+    }
+});
+
+router.post('/FollowUp/:id/:followUpId/delete', isAuthenticated, async (req, res, next) => {
+    try {
+        const customer = await Customer.findOneAndUpdate(
+            { _id: req.params.id, 'followUps._id': req.params.followUpId },
+            { $pull: { followUps: { _id: req.params.followUpId } } },
+            { new: true }
+        );
+        if (!customer) {
+            req.flash('error', 'Follow-up not found.');
+            return res.redirect('/');
+        }
+
+        req.flash('success', 'Follow-up deleted.');
+        return res.redirect('/');
+    } catch (err) {
+        return next(err);
+    }
+});
+
+router.post('/FollowUp/:id/:followUpId/complete', isAuthenticated, async (req, res, next) => {
+    try {
+        const customer = await Customer.findOneAndUpdate(
+            { _id: req.params.id, 'followUps._id': req.params.followUpId },
+            { $set: { 'followUps.$.completedAt': new Date() } },
+            { new: true }
+        );
+        if (!customer) {
+            req.flash('error', 'Follow-up not found.');
+            return res.redirect('/');
+        }
+
+        req.flash('success', 'Follow-up marked complete.');
+        return res.redirect('/');
+    } catch (err) {
+        return next(err);
+    }
+});
+
 //search
 router.get('/Search', isAuthenticated, async (req, res, next) => {
     return res.status(403).render('pages/Error', { message: 'Search is only allowed from the Home page' });
@@ -325,4 +468,3 @@ Numbers.forEach((number)=>{
 })**/
 
 module.exports=router;
-

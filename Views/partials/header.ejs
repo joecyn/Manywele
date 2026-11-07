@@ -16,6 +16,30 @@
           <a class="nav-link" href="/Add"><i class="fa-solid fa-circle-plus"></i> New Debt</a>
         </li>
         <% if (user) { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle notification-nav-link" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-bell"></i> Notifications
+              <% if (typeof todayFollowUps !== 'undefined' && todayFollowUps.length > 0) { %>
+                <span class="notification-count"><%= todayFollowUps.length %></span>
+              <% } %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationsDropdown">
+              <li><h6 class="dropdown-header">Follow-ups due today</h6></li>
+              <% if (typeof todayFollowUps !== 'undefined' && todayFollowUps.length > 0) { %>
+                <% todayFollowUps.forEach(function(followUp) { %>
+                  <li>
+                    <a class="dropdown-item notification-dropdown-item" href="/Details/<%= followUp.customerId %>">
+                      <strong><%= followUp.customerName.toUpperCase() %></strong>
+                      <span><%= followUp.phone %></span>
+                      <small>Due <%= followUp.dueDate %></small>
+                    </a>
+                  </li>
+                <% }) %>
+              <% } else { %>
+                <li><span class="dropdown-item-text text-muted">No follow-ups due today.</span></li>
+              <% } %>
+            </ul>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/SignOut"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
           </li>

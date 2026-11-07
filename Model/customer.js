@@ -14,6 +14,20 @@ const customerSchema=new mongoose.Schema({
         max:11,
         min:10
     },
+    followUps:[{
+        dueDate:{
+            type:String,
+            required:true
+        },
+        completedAt:{
+            type:Date,
+            default:null
+        },
+        createdAt:{
+            type:Date,
+            default:Date.now
+        }
+    }],
     debt:[{
         amount:{
             type:Number,

@@ -27,6 +27,11 @@
         <%= message.success %>
       </div>
     <% } %>
+    <% if (message && message.error) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= message.error %>
+      </div>
+    <% } %>
     <div class="table-responsive">
       <table class="table table-hover table-dark">
         <thead>
@@ -63,6 +68,16 @@
                   <a href="/Details/<%= customer._id %>" class="btn btn-sm btn-outline-light" title="View Details"><i class="fa-solid fa-eye"></i></a>
                   <a href="/Payment/<%= customer._id %>" class="btn btn-sm btn-outline-light">PAY</a>
                   <a href="/Update/<%= customer._id %>" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fa-solid fa-pencil"></i></a>
+                  <% const pendingFollowUpCount = customer.followUps.filter(function(followUp) { return !followUp.completedAt; }).length; %>
+                  <button type="button" class="btn btn-sm btn-outline-light notification-button" title="View follow-ups" aria-label="View follow-ups"
+                    data-bs-toggle="modal" data-bs-target="#followUpModal"
+                    data-customer-id="<%= customer._id %>" data-customer-name="<%= customer.name %>"
+                    data-follow-up-template="follow-up-notifications-<%= customer._id %>">
+                    <i class="fa-solid fa-bell"></i>
+                    <% if (pendingFollowUpCount > 0) { %>
+                      <span class="notification-count"><%= pendingFollowUpCount %></span>
+                    <% } %>
+                  </button>
                   <a href="/Delete/<%= customer._id %>" class="btn btn-sm btn-danger" title="Delete" onclick="return confirm('Warning: This will permanently delete this record. This action cannot be undone. Do you want to continue?');"><i class="fa-solid fa-trash-can"></i></a>
                 </td>
               </tr>
@@ -71,6 +86,47 @@
         </tbody>
       </table>
     </div>
+    <% if (customers && customers.length > 0) { %>
+      <% customers.forEach(function(customer) { %>
+        <template id="follow-up-notifications-<%= customer._id %>">
+          <% if (!customer.followUps || customer.followUps.length === 0) { %>
+            <p class="text-muted">No follow-ups for this customer yet.</p>
+          <% } else { %>
+            <% customer.followUps.forEach(function(followUp) { %>
+              <article class="follow-up-entry">
+                <div>
+                  <strong>Due <%= followUp.dueDate %></strong>
+                  <span class="badge <%= followUp.completedAt ? 'text-bg-success' : (followUp.dueDate <= today ? 'text-bg-warning' : 'text-bg-primary') %>">
+                    <%= followUp.completedAt ? 'Completed' : (followUp.dueDate <= today ? 'Due' : 'Upcoming') %>
+                  </span>
+                </div>
+                <div class="follow-up-actions">
+                  <% if (!followUp.completedAt) { %>
+                    <form method="POST" action="/FollowUp/<%= customer._id %>/<%= followUp._id %>/complete">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <button type="submit" class="btn btn-sm btn-outline-success">Complete</button>
+                    </form>
+                  <% } %>
+                  <details class="follow-up-edit">
+                    <summary class="btn btn-sm btn-outline-primary">Edit</summary>
+                    <form method="POST" action="/FollowUp/<%= customer._id %>/<%= followUp._id %>/edit" class="follow-up-edit-form">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                      <label class="form-label">Due date</label>
+                      <input type="date" name="dueDate" class="form-control form-control-sm" value="<%= followUp.dueDate %>" required />
+                      <button type="submit" class="btn btn-sm btn-primary mt-2">Save</button>
+                    </form>
+                  </details>
+                  <form method="POST" action="/FollowUp/<%= customer._id %>/<%= followUp._id %>/delete" onsubmit="return confirm('Delete this follow-up?');">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                  </form>
+                </div>
+              </article>
+            <% }) %>
+          <% } %>
+        </template>
+      <% }) %>
+    <% } %>
 
     <% const currentPage = typeof page !== 'undefined' ? page : 1; const pageSizeLocal = typeof pageSize !== 'undefined' ? pageSize : 5; const totalPagesLocal = typeof totalPages !== 'undefined' ? totalPages : 1; const totalRecords = typeof totalCustomersCount !== 'undefined' ? totalCustomersCount : 0; const startRecord = totalRecords === 0 ? 0 : ((currentPage - 1) * pageSizeLocal) + 1; const endRecord = Math.min(currentPage * pageSizeLocal, totalRecords); %>
     <div style="margin-bottom:12px;color:#333;font-size:0.95rem;">
@@ -100,5 +156,51 @@
     <% } %>
     <br>
   </div>
+  <div class="modal fade" id="followUpModal" tabindex="-1" aria-labelledby="followUpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title" id="followUpModalLabel">Customer follow-ups</h5>
+            <div id="followUpCustomerName" class="text-muted"></div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="followUpList"></div>
+          <hr>
+          <h6>Add follow-up</h6>
+          <form id="followUpForm" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+            <label for="followUpDueDate" class="form-label">Due date</label>
+            <input id="followUpDueDate" type="date" name="dueDate" class="form-control" required />
+            <button type="submit" class="btn btn-primary mt-3">Add Follow-up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const followUpModal = document.getElementById('followUpModal');
+    followUpModal.addEventListener('show.bs.modal', (event) => {
+      const trigger = event.relatedTarget;
+      const form = document.getElementById('followUpForm');
+      const dueDate = document.getElementById('followUpDueDate');
+      const today = new Date();
+      const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 10);
+      const notificationTemplate = document.getElementById(trigger.dataset.followUpTemplate);
+
+      document.getElementById('followUpCustomerName').textContent = trigger.dataset.customerName;
+      document.getElementById('followUpList').replaceChildren(notificationTemplate.content.cloneNode(true));
+      form.reset();
+      form.action = `/FollowUp/${encodeURIComponent(trigger.dataset.customerId)}`;
+      dueDate.min = localToday;
+      document.querySelectorAll('.follow-up-edit-form input[type="date"]').forEach((input) => {
+        input.min = localToday;
+      });
+    });
+  </script>
 </body>
 </html>
