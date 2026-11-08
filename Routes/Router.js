@@ -36,7 +36,7 @@ router.get("/SignOut",isAuthenticated,(req,res)=>{
 }
 )
 
-router.use( isAuthenticated, async (req, res, next) => {
+router.use(isAuthenticated, async (req, res, next) => {
     try {
         const dateParts = new Intl.DateTimeFormat('en', {
             timeZone: 'Africa/Nairobi',
@@ -302,7 +302,7 @@ try {
 
 })
 //Detail view route
-router.get("/Details/:id",isAuthenticated,async(req,res,next)=>{
+router.get("/Details/:id",async(req,res,next)=>{
     const id=req.params.id;
     const user=req.user
     try {

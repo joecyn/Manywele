@@ -56,7 +56,7 @@ const customerSchema=new mongoose.Schema({
             },
                datePaid: {
                 type: Date,
-                default: Date.now()
+                default: Date
             }
         }]
     
